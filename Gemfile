@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+ruby '2.0.0'
 gem 'rails', '4.0.0'
 gem 'thin'
 
@@ -34,6 +35,9 @@ group :doc do
 end
 
 gem 'mongoid', github: 'mongoid/mongoid'
+#Heroku rails4 logs
+gem 'rails_12factor'
+gem 'newrelic_rpm'
 
 
 gem 'rabl'
