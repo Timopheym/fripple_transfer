@@ -1,0 +1,167 @@
+body{
+    background-image: url("bg.png");
+}
+#Fripple-app header li {
+    float: left;
+    margin-right: 20px;
+}
+#Fripple-app{
+    height: 600px; /*FULL*/
+}
+#Fripple-app-content{
+    clear: both;
+    height: 600px; /*FULL*/
+}
+#Fripple-enter{
+    height: 600px; /*FULL*/
+}
+/*Constructor widget*/
+
+/* Common */
+.element-icon{
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-color: gray;
+}
+/* elementBuilder */
+.skin-block{
+    height: 100% !important;
+    display: inline-block;
+    float: left;
+}
+.logic-block{
+    height: 100% !important;
+    display: inline-block;
+    float: left;
+}
+.skin-block canvas{
+
+}
+#blockly{
+    width: 500px!important;
+    height: 500px!important;
+
+}
+footer{
+    clear: both;
+
+}
+
+/* Board */
+#Fripple-board{
+    position: relative;
+}
+#toolbar,
+#boardsbar,
+#simulationbar {
+    position: absolute;
+}
+#toolbar,
+#simulationbar {
+    top: 0px;
+    height: 20px;
+    background-color: #000;
+}
+#toolbar span,
+#simulationbar span {
+    width: 16px;
+    height: 16px;
+    background-color: none;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-left: 2px;
+    display: block;
+    float: left;
+    cursor: pointer;
+}
+#simulationbar {
+    left: 650px;
+}
+#simulationbar .translate {
+    width: auto;
+    color: #fff;
+}
+#simulationbar .pause {
+    display: none;
+}
+#simulationbar .stop {
+    display: none;
+}
+#boardsbar {
+    top: 0px;
+    left: 500px;
+}
+#toolbar {
+    width: 400px;
+}
+
+#board-container {
+    position: relative;
+}
+
+/*Enter*/
+.enter-box-back{
+    background: url("enter_box_back.png") no-repeat;
+    height: 340px;
+    width: 406px;
+    margin: 0 auto;
+    position: relative;
+    top: 100px;
+}
+
+.name-field{
+    position: relative;
+    top: 10px;
+}
+
+.email-field{
+    position: relative;
+    top: 50px;
+}
+
+.password-field{
+    position: relative;
+    top: 100px;
+}
+
+.enter-button{
+    position: relative;
+    top: 160px;
+}
+.enter-box-back form {
+    margin: 0 auto;
+    width: 220px;
+}
+
+/*Enter*/
+
+.registration-box form{
+    position: relative;
+    top: 42px;
+}
+.registration-box .name-field{
+    position: relative;
+    top: 50px;
+}
+
+.registration-box .email-field{
+    position: relative;
+    top: 45px;
+}
+
+.registration-box .password-field{
+    position: relative;
+    top: 40px;
+}
+
+.registration-box .password-repeat-field{
+    position: relative;
+    top: 35px;
+}
+
+.registration-button{
+    position: relative;
+    top: 38px;
+    left: 85px;
+}

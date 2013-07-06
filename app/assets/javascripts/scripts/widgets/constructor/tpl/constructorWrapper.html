@@ -1,0 +1,61 @@
+<div class="library">
+    <span class="element-icon"></span>
+    <span class="element-icon"></span>
+    <span class="element-icon"></span>
+    <span class="element-icon"></span>
+    <span class="element-icon"></span>
+    <span class="element-icon"></span>
+</div>
+<div class="skin-block">
+    <p class="block-header"><%= i18n.skin %></p>
+    <canvas class="skin-canvas" width="400" height="400"></canvas>
+    <div class="skin-menu">
+        <span class="pencil"><%= i18n.pencil %></span>
+        <span class="circle"><%= i18n.circle %></span>
+        <span class="rectangle"><%= i18n.rectangle %></span>
+    </div>
+    <button class="save">
+        <%= i18n.save %>
+    </button>
+    <button id="runButton" class="launch">
+        <%= i18n.run %>
+    </button>
+    <button id="resetButton" class="launch" style="display: none">
+        <%= i18n.reset %>
+    </button>
+</div>
+<div class="logic-block" id="logic-block">
+
+    <p class="block-header"><%= i18n.logic %></p>
+
+    <xml id="toolbox" style="display: none">
+        <!--General-->
+
+        <category name="Control">
+            <block type="controls_if"></block>
+            <block type="controls_repeat_ext">
+                <value name="TIMES">
+                    <block type="math_number">
+                        <title name="NUM">10</title>
+                    </block>
+                </value>
+            </block>
+            <block type="controls_whileUntil"></block><block type="controls_for"><value name="FROM"><block type="math_number"><title name="NUM">1</title></block></value><value name="TO"><block type="math_number"><title name="NUM">10</title></block></value></block><block type="controls_forEach"></block><block type="controls_flow_statements"></block></category>
+        <category name="Logic"><block type="logic_compare"></block><block type="logic_operation"></block><block type="logic_negate"></block><block type="logic_boolean"></block><block type="logic_null"></block><block type="logic_ternary"></block></category>
+        <category name="Math"><block type="math_number"></block><block type="math_arithmetic"></block><block type="math_single"></block><block type="math_trig"></block><block type="math_constant"></block><block type="math_number_property"></block><block type="math_change"><value name="DELTA"><block type="math_number"><title name="NUM">1</title></block></value></block><block type="math_round"></block><block type="math_on_list"></block><block type="math_modulo"></block><block type="math_constrain"><value name="LOW"><block type="math_number"><title name="NUM">1</title></block></value><value name="HIGH"><block type="math_number"><title name="NUM">100</title></block></value></block><block type="math_random_int"><value name="FROM"><block type="math_number"><title name="NUM">1</title></block></value><value name="TO"><block type="math_number"><title name="NUM">100</title></block></value></block><block type="math_random_float"></block></category>
+        <category name="Lists"><block type="lists_create_empty"></block><block type="lists_create_with"></block><block type="lists_repeat"><value name="NUM"><block type="math_number"><title name="NUM">5</title></block></value></block><block type="lists_length"></block><block type="lists_isEmpty"></block><block type="lists_indexOf"><value name="VALUE"><block type="variables_get"><title name="VAR">list</title></block></value></block><block type="lists_getIndex"><value name="VALUE"><block type="variables_get"><title name="VAR">list</title></block></value></block><block type="lists_setIndex"><value name="LIST"><block type="variables_get"><title name="VAR">list</title></block></value></block><block type="lists_getSublist"><value name="LIST"><block type="variables_get"><title name="VAR">list</title></block></value></block></category>
+        <category name="Variables" custom="VARIABLE"></category>
+        <category name="Procedures" custom="PROCEDURE"></category>
+
+        <category name="Fripple">
+            <block type="fripple_frame"></block>
+            <block type="fripple_debug"></block>
+            <block type="fripple_moveObject"></block>
+        </category>
+
+        <category name="Objects" id="objectsToolbox">
+            <block type="fripple_object"></block>
+        </category>
+    </xml>
+    <div id="blockly"></div>
+</div>

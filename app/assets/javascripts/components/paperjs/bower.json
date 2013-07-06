@@ -1,0 +1,15 @@
+{
+  "name": "Paper.js",
+  "version": "0.8.0",
+  "main": "./lib/paper.js",
+  "description": "This repository contains the Paper.js distributable files available as the [Twitter Bower](http://twitter.github.com/bower/) packages",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/christophe-conceicao/paperjs.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
