@@ -50155,3 +50155,6 @@ b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
     "logic": "Логика"
 }
 },{},{});
+
+
+//@ sourceMappingURL=/app/assets/javascripts/scripts/compiled/dev.lmd.map?0.602417232003063

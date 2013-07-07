@@ -7,6 +7,7 @@ class BoardsController < ApplicationController
   # GET /boards.json
   def index
     @boards = Board.all
+    render "boards/index"
   end
 
   # GET /boards/1
