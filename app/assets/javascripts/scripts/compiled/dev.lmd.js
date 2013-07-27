@@ -262,7 +262,7 @@ var $ = require('$'),
     _ = require('_'),
     Backbone = require('backbone'),
     Fripple = require('Fripple'),
-    io = require('socket.ioHelper'),
+    storageManager = require('storageManager'),
     widgetsManager = require('widgetsManager');
 
 $(function () {
@@ -310,7 +310,8 @@ $(function () {
 //    Fripple.userSettings = window.userSettings;
 
     // Initialize Widgets Manager
-    new widgetsManager();
+    Fripple.widgetsManager = new widgetsManager();
+    Fripple.storageManager = new storageManager();
     Fripple.trigger('startWidget', { name: 'app', options : {} });
 //        }
 //    });
@@ -33320,6 +33321,72 @@ widgetsManager.prototype.startWidget = function (event) {
 
 module.exports = widgetsManager;
 }),
+"storageManager": (function (require, exports, module) { /* wrapped by builder */
+/**
+ * Created with JetBrains RubyMine.
+ * User: T
+ * Date: 7/24/13
+ * Time: 11:08 PM
+ * To change this template use File | Settings | File Templates.
+ */
+/**
+ * @author Timophey Molchanov <timopheym@gmail.com>
+ * @class WidgetsManager
+ * @extends Object
+ * Date: 6/12/13 10:27 PM
+ *
+ */
+
+"use strict";
+
+var Fripple = require('Fripple'),
+    $ = require('$'),
+    _ = require('_');
+
+var storageManager = function () {
+    var self = this,
+        evnt = new EventSource('/events');
+    this.collections = {};
+    Fripple.on('add:storage',function (e) {
+        self.collections[e.name] = e.value;
+    });
+    Fripple.on('get:storage',function (e) {
+        e.callback(self.collections[e.name]);
+    });
+    Fripple.on('update:storage',function () {
+        self.collections[e.name].get(e.id).set(e.property, e.value);
+    });
+    evnt.addEventListener('message', function(e) {
+        var message = $.parseJSON(e.data);
+        message.data = $.parseJSON(message.data);
+        console.log(message.event)
+        if (message.event == "boards:create") {
+            console.log(self.collections.boards)
+            if (typeof message.data.id == "object") {
+                message.data.id = message.data.id.$oid
+            }
+//            else {
+//                message.data.id = message.data.id.$oid
+//            }
+
+            self.collections.boards.add(message.data);
+        } else if (message.event == "boards:read") {
+
+        } else if (message.event == "boards:update") {
+            self.collections.boards.get(message._id.$oid)
+                .set(message.data.property, message.data.value);
+        } else if (message.event == "boards:delete") {
+
+        } else if (message.event == "boards:open") {
+            Fripple.trigger('boards:create', message.data._id.$oid)
+        } else if (message.event == "boards:open") {
+
+        }
+    });
+};
+
+module.exports = storageManager;
+}),
 "appRouter": (function (require, exports, module) { /* wrapped by builder */
 /**
  * @author Timophey Molchanov <timopheym@gmail.com>
@@ -33344,6 +33411,12 @@ var appRouter = backbone.Router.extend({
         'boards/:bid'       : 'board',
         'constructor/:eid'  : 'constr',
         'constructor'       : 'constr'
+    },
+    initialize: function () {
+        var self = this;
+        Fripple.on('route', function (route) {
+            self.navigate(route, {trigger: true});
+        });
     },
     home: function () {
         Fripple.trigger('startWidget', { name : 'home', options : {}});
@@ -33770,6 +33843,7 @@ var Backbone = require('Backbone'),
     Fripple = require('Fripple'),
     ItemsCollection = require('ItemsCollection'),
     ItemModel = require('ItemModel'),
+    BoardModel = require('BoardModel'),
     viewerWrapperTpl = require('boardWrapperTpl'),
     Physics = require('boardPhysics');
 
@@ -33820,6 +33894,9 @@ var boardWidget = Backbone.Marionette.CollectionView.extend({
             this.$parent.html($('<div/>').attr('id', 'Fripple-board'));
             this.setElement('#Fripple-board');
         }
+        var b = new BoardModel({_id: options.bid});
+//        console.log(b, b.url());
+        b.fetch()
 
         this.render();
         //Start on initing
@@ -34999,14 +35076,41 @@ var backbone = require('backbone'),
 
 var homeWidget = backbone.View.extend({
 
-
+    events : {
+      'click .create-board' : 'onCreateBoardClick',
+      'click .board-item' : 'onBoardItemClick'
+    },
+    onBoardItemClick : function (e){
+        var item = e.currentTarget,
+            id = $(item).data('id');
+        this.openBoard(id);
+    },
+    onCreateBoardClick : function (e){
+        var name = prompt("Enter board name:"),
+            board = new BoardModel({
+            name : name
+        });
+        this.collection.add(board.save());
+    },
+    openBoard: function (id){
+        Fripple.trigger('route', '/boards/' + id )
+    },
     initialize : function () {
+        var self = this;
         this.$parent = $('#Fripple-app-content');
         this.setElement('#Fripple-news');
         this.template = _.template(homeWrapperTpl, {});
+        console.log(this.template,'template');
         this.collection = new BoardsCollection();
+        this.collection.on('add', function (model){
+            console.log('add---')
+            console.log(model);
+            self.$el.append('<p class="board-item" data-id="'+model.get('id')+'">'
+                +model.get('name')+
+            '</p>');
+        });
+        Fripple.trigger('add:storage', {name : 'boards', value: this.collection});
         this.start();
-//        console.log(Fripple);
     },
 
     /**
@@ -35014,6 +35118,7 @@ var homeWidget = backbone.View.extend({
      * Render widget to DOM
      * */
     start : function () {
+        var self = this;
         if ($('#Fripple-news').length === 0) { //Append element to parent
             this.$parent.html($('<div/>').attr('id', 'Fripple-news'));
             this.setElement('#Fripple-news');
@@ -39254,7 +39359,7 @@ module.exports = BoardsView;
 "appWrapperTpl": "<header>\n    <ul>\n        <li><a href=\"#\">На главную</a></li>\n        <li><a href=\"#boards/1\">Доска</a></li>\n        <li><a href=\"#library\">Библиотека</a></li>\n        <li><a href=\"#constructor/1\">Элемент 1</a></li>\n        <li><a href=\"#constructor/2\">Элемент 2</a></li>\n        <% if (isAdmin) { %>\n            <li><a href=\"#settings\">Настройки</a></li>\n        <% } %>\n        <li><a href=\"/logout\">Выход</a></li>\n    </ul>\n</header>\n    <div id=\"Fripple-app-content\">\n        <h1>No widgets loaded</h1>\n    </div>\n<footer></footer>",
 "boardWrapperTpl": "<div id=\"toolbar\" class=\"bar\">\n    <span class=\"tool\" data-name=\"cursor\"></span>\n    <span class=\"tool\" data-name=\"eraser\"></span>\n    <span class=\"tool\" data-name=\"whatis\"></span>\n    <span class=\"tool\" data-name=\"pencil\"></span>\n    <span></span>\n    <span class=\"element\" data-name=\"circle\"></span>\n    <span class=\"element\" data-name=\"rect\"></span>\n    <span class=\"element\" data-name=\"gear\"></span>\n    <span class=\"element\" data-name=\"plant\"></span>\n    <span class=\"element\" data-name=\"ground\"></span>\n    <span class=\"element\" data-name=\"sun\"></span>\n    <span></span>\n    <span></span>\n    <span></span>\n    <span class=\"element\" data-name=\"constructor\"></span>\n</div>\n<!--<div id=\"boardsbar\">-->\n    <!--<select>-->\n        <!--<option><%= name %></option>-->\n    <!--</select>-->\n<!--</div>-->\n<div id=\"simulationbar\" class=\"bar\">\n    <span class=\"control\" data-name=\"stop\"></span>\n    <span class=\"control\" data-name=\"pause\"></span>\n    <span class=\"control\" data-name=\"play\"></span>\n    <span class=\"control\" data-name=\"broadcast\"><input type=\"checkbox\"></span>\n</div>\n\n<canvas id=\"board\" width=\"2000\" height=\"2000\">You have an old browser</canvas>\n\n",
 "constructorWrapperTpl": "<div class=\"library\">\n    <span class=\"element-icon\"></span>\n    <span class=\"element-icon\"></span>\n    <span class=\"element-icon\"></span>\n    <span class=\"element-icon\"></span>\n    <span class=\"element-icon\"></span>\n    <span class=\"element-icon\"></span>\n</div>\n<div class=\"skin-block\">\n    <p class=\"block-header\"><%= i18n.skin %></p>\n    <canvas class=\"skin-canvas\" width=\"400\" height=\"400\"></canvas>\n    <div class=\"skin-menu\">\n        <span class=\"pencil\"><%= i18n.pencil %></span>\n        <span class=\"circle\"><%= i18n.circle %></span>\n        <span class=\"rectangle\"><%= i18n.rectangle %></span>\n    </div>\n    <button class=\"save\">\n        <%= i18n.save %>\n    </button>\n    <button id=\"runButton\" class=\"launch\">\n        <%= i18n.run %>\n    </button>\n    <button id=\"resetButton\" class=\"launch\" style=\"display: none\">\n        <%= i18n.reset %>\n    </button>\n</div>\n<div class=\"logic-block\" id=\"logic-block\">\n\n    <p class=\"block-header\"><%= i18n.logic %></p>\n\n    <xml id=\"toolbox\" style=\"display: none\">\n        <!--General-->\n\n        <category name=\"Control\">\n            <block type=\"controls_if\"></block>\n            <block type=\"controls_repeat_ext\">\n                <value name=\"TIMES\">\n                    <block type=\"math_number\">\n                        <title name=\"NUM\">10</title>\n                    </block>\n                </value>\n            </block>\n            <block type=\"controls_whileUntil\"></block><block type=\"controls_for\"><value name=\"FROM\"><block type=\"math_number\"><title name=\"NUM\">1</title></block></value><value name=\"TO\"><block type=\"math_number\"><title name=\"NUM\">10</title></block></value></block><block type=\"controls_forEach\"></block><block type=\"controls_flow_statements\"></block></category>\n        <category name=\"Logic\"><block type=\"logic_compare\"></block><block type=\"logic_operation\"></block><block type=\"logic_negate\"></block><block type=\"logic_boolean\"></block><block type=\"logic_null\"></block><block type=\"logic_ternary\"></block></category>\n        <category name=\"Math\"><block type=\"math_number\"></block><block type=\"math_arithmetic\"></block><block type=\"math_single\"></block><block type=\"math_trig\"></block><block type=\"math_constant\"></block><block type=\"math_number_property\"></block><block type=\"math_change\"><value name=\"DELTA\"><block type=\"math_number\"><title name=\"NUM\">1</title></block></value></block><block type=\"math_round\"></block><block type=\"math_on_list\"></block><block type=\"math_modulo\"></block><block type=\"math_constrain\"><value name=\"LOW\"><block type=\"math_number\"><title name=\"NUM\">1</title></block></value><value name=\"HIGH\"><block type=\"math_number\"><title name=\"NUM\">100</title></block></value></block><block type=\"math_random_int\"><value name=\"FROM\"><block type=\"math_number\"><title name=\"NUM\">1</title></block></value><value name=\"TO\"><block type=\"math_number\"><title name=\"NUM\">100</title></block></value></block><block type=\"math_random_float\"></block></category>\n        <category name=\"Lists\"><block type=\"lists_create_empty\"></block><block type=\"lists_create_with\"></block><block type=\"lists_repeat\"><value name=\"NUM\"><block type=\"math_number\"><title name=\"NUM\">5</title></block></value></block><block type=\"lists_length\"></block><block type=\"lists_isEmpty\"></block><block type=\"lists_indexOf\"><value name=\"VALUE\"><block type=\"variables_get\"><title name=\"VAR\">list</title></block></value></block><block type=\"lists_getIndex\"><value name=\"VALUE\"><block type=\"variables_get\"><title name=\"VAR\">list</title></block></value></block><block type=\"lists_setIndex\"><value name=\"LIST\"><block type=\"variables_get\"><title name=\"VAR\">list</title></block></value></block><block type=\"lists_getSublist\"><value name=\"LIST\"><block type=\"variables_get\"><title name=\"VAR\">list</title></block></value></block></category>\n        <category name=\"Variables\" custom=\"VARIABLE\"></category>\n        <category name=\"Procedures\" custom=\"PROCEDURE\"></category>\n\n        <category name=\"Fripple\">\n            <block type=\"fripple_frame\"></block>\n            <block type=\"fripple_debug\"></block>\n            <block type=\"fripple_moveObject\"></block>\n        </category>\n\n        <category name=\"Objects\" id=\"objectsToolbox\">\n            <block type=\"fripple_object\"></block>\n        </category>\n    </xml>\n    <div id=\"blockly\"></div>\n</div>\n",
-"homeWrapperTpl": "<h1>Home widget</h1>",
+"homeWrapperTpl": "<h1>Home widget</h1>\n\n<span class=\"create-board\">Создать доску</span>",
 "libraryWrapperTpl": "<h1>Library widget</h1>",
 "Box2D": (function (require) { /* wrapped by builder */
 /*
@@ -50157,4 +50262,4 @@ b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
 },{},{});
 
 
-//@ sourceMappingURL=/app/assets/javascripts/scripts/compiled/dev.lmd.map?0.602417232003063
+//@ sourceMappingURL=/app/assets/javascripts/scripts/compiled/dev.lmd.map?0.3555199424736202

@@ -9,16 +9,14 @@
 
 "use strict";
 
-var Backbone = require('Backbone.iobind'),
+var Backbone = require('Backbone'),
     ItemModel = require('ItemModel'),
     ItemsCollection = require('ItemsCollection');
 
 Backbone.RelationModel = require('Backbone.Relational');
 
 var BoardModel = Backbone.RelationalModel.extend({
-    idAttribute: "_id",
-    noIoBind: false,
-    socket: Backbone.socket,
+    idAttribute: "_id.$oid",
     relations: [
         {
             type: Backbone.HasMany,
@@ -32,7 +30,7 @@ var BoardModel = Backbone.RelationalModel.extend({
         }
     ],
     url: function () {
-        return "/boards" + (this.id ? "/" + this.id : "");
+        return "/boards" + (this._id ? "/" + this._id : "");
     },
     defaults: function () {
         return {

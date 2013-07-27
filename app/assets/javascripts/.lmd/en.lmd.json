@@ -1,0 +1,7 @@
+{
+    "name": "MIXIN: en locale",
+    "root": "../app/i18n",
+    "modules": {
+        "i18n": "en.json"
+    }
+}

@@ -16,7 +16,7 @@ development:
 
       encoding: utf8
 
-      database: fripple_development
+      database: fripple
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:

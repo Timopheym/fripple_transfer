@@ -12,7 +12,7 @@ var $ = require('$'),
     _ = require('_'),
     Backbone = require('backbone'),
     Fripple = require('Fripple'),
-    io = require('socket.ioHelper'),
+    storageManager = require('storageManager'),
     widgetsManager = require('widgetsManager');
 
 $(function () {
@@ -60,7 +60,8 @@ $(function () {
 //    Fripple.userSettings = window.userSettings;
 
     // Initialize Widgets Manager
-    new widgetsManager();
+    Fripple.widgetsManager = new widgetsManager();
+    Fripple.storageManager = new storageManager();
     Fripple.trigger('startWidget', { name: 'app', options : {} });
 //        }
 //    });

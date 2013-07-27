@@ -22,6 +22,12 @@ var appRouter = backbone.Router.extend({
         'constructor/:eid'  : 'constr',
         'constructor'       : 'constr'
     },
+    initialize: function () {
+        var self = this;
+        Fripple.on('route', function (route) {
+            self.navigate(route, {trigger: true});
+        });
+    },
     home: function () {
         Fripple.trigger('startWidget', { name : 'home', options : {}});
         console.debug('[Router] Home page');

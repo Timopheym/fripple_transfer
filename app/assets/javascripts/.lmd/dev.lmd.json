@@ -1,0 +1,159 @@
+{
+    "name": "dev build",
+    "root": "../",
+    "output": "scripts/compiled/dev.lmd.js",
+    "sourcemap": "scripts/compiled/dev.lmd.map",
+    "sourcemap_inline": true,
+    "sourcemap_www": "",
+
+    "www_root": "../../../",
+    "modules": {
+
+        "_": {
+            "path": "components/lodash/lodash.js",
+            "exports": "_"
+        },
+
+        "underscore":  {
+            "path": "components/underscore/underscore-min.js",
+            "exports": "_"
+        },
+
+        "$": {
+            "path": "components/jquery/jquery.min.js",
+            "exports": "jQuery"
+        },
+
+        "Backbone": {
+            "path": "components/backbone/backbone.js",
+            "require": {
+                "underscore": "_",
+                "jQuery": "$"
+            },
+            "exports": "Backbone"
+        },
+
+        "backbone": {
+            "path": "components/backbone/backbone.js",
+            "require": {
+                "underscore": "_",
+                "jQuery": "$"
+            },
+            "exports": "Backbone"
+        },
+
+        "Backbone.iobind": {
+            "path": "components/backbone.iobind/backbone.iobind.min.js",
+            "require": {
+                "Backbone": "Backbone",
+                "underscore": "_",
+                "jQuery": "$"
+            },
+            "exports": "Backbone"
+        },
+
+        "Backbone.Marionette": {
+            "path": "components/backbone.marionette/lib/backbone.marionette.js",
+            "require": {
+                "Backbone": "Backbone",
+                "underscore": "_",
+                "jQuery": "$"
+            },
+            "exports": "Backbone.Marionette"
+        },
+
+        "Backbone.Relational": {
+            "path": "components/backbone.relational/backbone-relational.js",
+            "require": {
+                "Backbone": "Backbone",
+                "underscore": "underscore",
+                "jQuery": "$"
+            }
+        },
+
+        "store": "components/backbone.localStorage/backbone.localStorage.js",
+
+        "jquery.ui.widget" : {
+            "path" : "components/jquery-file-upload/js/vendor/jquery.ui.widget.js"
+        },
+        "jquery.iframe-transport" : {
+            "path" : "components/jquery-file-upload/js/jquery.iframe-transport.js"
+        },
+        "jquery.fileupload": {
+            "path": "components/jquery-file-upload/js/jquery.fileupload.js",
+
+            "exports": "$"
+        },
+        "dat": {
+            "path" : "components/dat.gui/dat.gui.js",
+            "exports": "dat"
+        },
+
+        "generator": {
+            "path" : "components/blocky/generators/javascript_compressed.js",
+            "require": {
+                "Blockly" : "Blockly"
+            }
+        },
+        "utils" : {
+            "path" :"components/blocky/common.js",
+            "require": {
+                "Blockly" : "Blockly"
+            }
+        },
+        "defaultBlocks" : {
+            "path" : "components/blocky/en_compressed.js",
+            "require": {
+                "Blockly" : "Blockly"
+            }
+        },
+        "Blockly-langauge": {
+            "path" : "components/blocky/language/en/_messages.js",
+            "require": {
+                "Blockly" : "Blockly"
+            }
+        },
+        "Blockly": {
+            "path" : "components/blocky/blockly_compressed.js",
+            "require": {
+                "generator": "",
+                "blocks" : ""
+            },
+            "exports": "Blockly"
+        },
+
+        "jquery.mousewheel": {
+            "path": "components/jquery-mousewheel/jquery.mousewheel.js",
+            "exports": "$"
+        },
+
+        "paper": {
+            "path": "components/paperjs/lib/paper.js",
+            "exports": "paper"
+        },
+
+        "Fripple"  : "scripts/Fripple.js",
+        "main" : "scripts/main.js",
+        "widgetsManager" : "scripts/widgetsManager.js",
+        "storageManager" : "scripts/storageManager.js",
+
+        "<%= dir[0] %><%= file[0].toUpperCase() %><%= file.slice(1, file.length) %>": "scripts/widgets/**/*.js",
+        "<%= file %><%= dir[0][0].toUpperCase() %><%= dir[0].slice(1, -1) %>": "scripts/helpers/**/*.js",
+        "<%=  file %><%= dir[0][0].toUpperCase() %><%= dir[0].slice(1, -1) %>": "scripts/widgets/**/{collections,models,routers,views}/*.js",
+        "<%= file %><%= dir[0][0].toUpperCase() %><%= dir[0].slice(1, dir[0].length) %>": "scripts/widgets/**/tpl/*.html",
+        "<%= file %><%= dir[0][0].toUpperCase() %><%= dir[0].slice(1, dir[0].length-1) %>": "scripts/widgets/**/{views,models,collections}/*.js",
+
+        "Box2D": {
+            "path" : "components/box2d/Box2dWeb-2.1.a.3.min.js",
+            "exports": "Box2D"
+        },
+
+        "box2dshim": {
+            "path" : "components/box2d/b2-shim.js",
+            "require": {
+                "Box2D" : "Box2D"
+            }
+        }
+    },
+    "main": "main"
+}

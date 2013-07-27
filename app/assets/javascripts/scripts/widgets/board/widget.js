@@ -18,6 +18,7 @@ var Backbone = require('Backbone'),
     Fripple = require('Fripple'),
     ItemsCollection = require('ItemsCollection'),
     ItemModel = require('ItemModel'),
+    BoardModel = require('BoardModel'),
     viewerWrapperTpl = require('boardWrapperTpl'),
     Physics = require('boardPhysics');
 
@@ -68,6 +69,9 @@ var boardWidget = Backbone.Marionette.CollectionView.extend({
             this.$parent.html($('<div/>').attr('id', 'Fripple-board'));
             this.setElement('#Fripple-board');
         }
+        var b = new BoardModel({_id: options.bid});
+//        console.log(b, b.url());
+        b.fetch()
 
         this.render();
         //Start on initing

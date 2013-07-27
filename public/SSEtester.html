@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>.:SSE Tester:.</title>
+
+</head>
+
+<body>
+<script>
+    var source = new EventSource('/live'),
+//    var source = new EventSource('/boards/events'),
+            message;
+    source.addEventListener('messages.create', function (e) {
+        message = JSON.parse(e.data);
+        console.log(message[0].name);
+    });
+
+    source.addEventListener('open', function(e) {
+        console.log('SSE: Opend');
+        // Connection was opened.
+    }, false);
+
+    source.addEventListener('error', function(e) {
+        if (e.readyState == EventSource.CLOSED) {
+            console.log('SSE: Closed');
+            // Connection was closed.
+        }
+    }, false);
+</script>
+</body>
+</html>

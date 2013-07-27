@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 ruby '2.0.0'
 gem 'rails', '4.0.0'
-gem 'thin'
+gem 'puma'
 
 group :development do
 
@@ -48,6 +48,11 @@ gem 'slim'
 
 gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
 #gem 'devise_invitable'
+
+#Publish-subscribe and fast storage for board operating
+
+gem "redis"
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

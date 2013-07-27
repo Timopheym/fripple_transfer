@@ -1,3 +1,12 @@
 class Item
-  # To change this template use File | Settings | File Templates.
+  include Mongoid::Document
+  include Mongoid::Timestamps::Created
+  belongs_to :board
+  field :color, :type => String
+  field :shape, :type => String
+  field :type, :type => String
+  field :index, :type => Integer
+  field :radius, :type => Integer
+  field :x, :type => Integer
+  field :y, :type => Integer
 end
